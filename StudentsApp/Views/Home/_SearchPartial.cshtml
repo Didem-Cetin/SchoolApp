@@ -1,0 +1,18 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model PartialSearchModel
+
+<input type="text" class="form-control me-1" placeholder="Ara" asp-for="Fullname" />
+<div class="input-group me-1">
+    <select class="form-select" id="filterHobbySelect" asp-for="HobbyId" asp-items="@Model.Hobbies">
+        <option value="">Hobi seçiniz</option>
+    </select>
+</div>
+<div class="input-group me-1">
+    <select class="form-select" id="filterTeacherSelect" asp-for="TeacherId" asp-items="@Model.Teachers">
+        <option value="">Sınıf öğretmeni seçiniz</option>
+
+    </select>
+</div>
+<button type="submit" onclick="search()" class="btn btn-primary">Ara</button>

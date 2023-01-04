@@ -1,0 +1,125 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<div class="row">
+    <div class="col-md-8 col-sm-12 ">
+
+        <div class="filter-area d-flex justify-content-around">
+            
+
+        </div>
+
+        <div class="table-responsive">
+            <table class="mt-2 table table-bordered table-hover table-striped table-md">
+                
+            </table>
+        </div>
+
+    </div>
+    <div class="col-md-4 col-12 ">
+        <div class=" mb-1 text-end">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalform" onclick="loadCreateModal()">
+                Yeni Öğrenci
+            </button>
+        </div>
+
+        <div class="pageForm">
+            
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal Create -->
+<div class="modal fade" id="modalform" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalform" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalformtitle">Öğrenci Pop-up Form</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="student-form-modal" class="modal-body">
+                
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+<!-- Modal Delete-->
+<div class="modal fade" id="modaldelete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modaldelete" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modaldeletetitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Silme Nedeni</span>
+                    <input type="text" class="form-control" aria-describedby="inputGroup-sizing-sm">
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" name="submitButton">Vazgeç</button>
+                    <button id="formdelete" class="btn btn-primary">Sil</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            
+            $(".filter-area").load("/Home/GetSeacrhPagePartial")
+            $(".pageForm").load("/Home/GetCreatePagePartial")
+            $("table").load("/Home/LoadStudent")
+        })
+        function loadStudent(){
+            $("table").empty();
+            $("table").load("/Home/LoadStudent")
+        }
+
+        function loadCreateModal() {
+            $("#student-form-modal").load("/Home/GetCreatModalPartial")
+            
+        }
+
+        function saveForm() {
+            var data     = {
+                "Fullname": $("#formFullName").val(),
+                "DepartmanId": $("#formDepartman").val(),
+                "HobbyId": $("#formHobby").val(),
+                "TeacherId": $("#formteacher1").val(),
+                "GuidanceCounselorId": $("#formTeacher2").val()
+            }
+            console.log(data)
+            $(".pageForm").load("/Home/PostCreatePartial", data, null);
+            
+            setTimeout(function(){
+                loadStudent();
+            },2000);
+            
+        }
+        function saveModalForm(){
+            var data = {
+                "Fullname": $("#modalFullName").val(),
+                "DepartmanId": $("#DepartmanId").val(),
+                "HobbyId": $("#HobbyId").val(),
+                "TeacherId": $("#TeacherId").val(),
+                "GuidanceCounselorId": $("#GuidanceCounselorId").val()
+            }
+            console.log(data)
+            $(".student-form-modal").load("/Home/PostCreatePartial", data, null);
+
+            setTimeout(function () {
+                loadStudent();
+            }, 2000);
+        }
+    </script>
+}
