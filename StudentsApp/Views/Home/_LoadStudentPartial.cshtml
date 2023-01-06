@@ -39,9 +39,20 @@
             <td>@item.GuidanceCounselor.Name</td>
             <td>
                 <button class="btn btn-primary pt-1 pb-1 mb-1">Detay</button>
-                <button onclick="Delete(@item.Id)" type="button" class="btn btn-primary pt-1 pb-1 mb-1" data-bs-toggle="modal" data-bs-target="#modaldelete" student-name="@item.Fullname">Sil</button>
+                <button onclick="deleteStudent(this,@item.Id)" type="button" class="btn btn-primary pt-1 pb-1 mb-1" data-bs-toggle="modal" data-bs-target="#modaldelete" student-name="@item.Fullname">Sil</button>
             </td>
         </tr>
     }
 
 </tbody>
+
+@section Scripts{
+    <script>
+        //<h5 class="modal-title" id = "modaldeletetitle" > </h5>
+        function deleteStudent(btn, id) {
+            var studentName = $(btn).attr("student-name");
+
+            console.log("merhaba");
+        }
+    </script>
+}

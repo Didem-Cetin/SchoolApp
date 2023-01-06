@@ -9,4 +9,10 @@ namespace StudentsApp.Models
             throw new NotImplementedException();
         }
     }
+    public class response<T>
+    {
+        public bool error { get; set; }
+        public T Data { get; set; }
+        public List<KeyValuePair<string, string>> errorMessage { get; set; }
+    }
 }

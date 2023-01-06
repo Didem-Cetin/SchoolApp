@@ -90,6 +90,20 @@
             
         }
 
+        //<h5 class="modal-title" id = "modaldeletetitle" > </h5>
+        function deleteStudent(btn, id) {
+            var studentName = $(btn).attr("student-name");
+            $("#modaldeletetitle").text(`Öğrenci ${studentName}- Silme Nedeniniz`)
+            
+            console.log(studentName);
+        }
+        function detailStudent(btn, id) {
+            var studentName = $(btn).attr("student-name");
+            $("#modaldeletetitle").text(`Öğrenci ${studentName}- Silme Nedeniniz`)
+            
+            console.log(studentName);
+        }
+
         function saveForm() {
             var data     = {
                 "Fullname": $("#formFullName").val(),

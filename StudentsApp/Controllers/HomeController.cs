@@ -24,6 +24,9 @@ namespace StudentsApp.Controllers
         public IActionResult LoadStudent()
         {
             List<Student> model = _databaseContext.Students.Include(x => x.Departman).Include(x => x.Teacher).Include(x => x.GuidanceCounselor).Include(x => x.Hobbies).ToList();
+
+            //response<Roles> Response1 = new response<Roles>();
+            //Response1.errorMessage.Add(new KeyValuePair<string, string>("hata 1", "hata"));
             return PartialView("_LoadStudentPartial", model);
         }
         public IActionResult GetSeacrhPagePartial()
@@ -81,13 +84,6 @@ namespace StudentsApp.Controllers
         }
 
 
-
-
-
-
-
-
-
         //Get: /Home/GetCreatModalPartial
         public IActionResult GetCreatModalPartial()
         {
@@ -101,6 +97,26 @@ namespace StudentsApp.Controllers
             };
             return PartialView("_CreateStudentPartial", model);
         }
+
+        [HttpPost]
+        public IActionResult DeleteStudent(int id)
+        {
+        
+            Student student = _databaseContext.Students.Find(id);
+            if(student != null) 
+            {
+                _databaseContext.Students.Remove(student);
+                //Loadstudent
+            }
+            else
+            {
+                //toattr show
+            }
+
+            return View();
+        
+        }
+
 
 
 
