@@ -1,33 +1,74 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-<div class="row">
+<div class="loader "></div>
+<div id="pagecontent" class="row">
     <div class="col-md-8 col-sm-12 ">
 
         <div class="filter-area d-flex justify-content-around">
-            
-
         </div>
-
+        <hr />
         <div class="table-responsive">
-            <table class="mt-2 table table-bordered table-hover table-striped table-md">
-                
+            <table class=" table table-bordered table-hover table-striped table-md">
             </table>
         </div>
 
     </div>
     <div class="col-md-4 col-12 ">
-        <div class=" mb-1 text-end">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalform" onclick="loadCreateModal()">
-                Yeni Öğrenci
-            </button>
-        </div>
+        <div class="sticky-top">
+            <div class=" mb-1 text-end ">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalform" onclick="loadCreateModal()">
+                    Yeni Öğrenci
+                </button>
+            </div>
 
-        <div class="pageForm">
-            
+            <div class="pageForm">
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Adı Soyadı</span>
+                    <input id="formFullName" type="text" class="form-control" aria-describedby="inputGroup-sizing-sm">
+                    <span class="text-danger"></span>
+                </div>
+
+                <div class="input-group mb-3">
+                    <select id="formDepartman" class="form-select">
+                        <option value="">Bölüm seçiniz</option>
+                    </select>
+                    <span class="text-danger"></span>
+                </div>
+
+                <div class="input-group mb-3">
+                    <select id="formHobby" class="form-select">
+                        <option value="">Hobi seçiniz</option>
+
+                    </select>
+                    <span class="text-danger"></span>
+                </div>
+
+                <div class="input-group mb-3">
+                    <select id="formteacher1" class="form-select">
+                        <option value="">Sınıf Öğretmeni</option>
+
+                    </select>
+                    <span class="text-danger"></span>
+                </div>
+
+                <div class="input-group mb-3">
+                    <select id="formTeacher2" class="form-select">
+                        <option value="">Rehber Öğretmeni</option>
+
+                    </select>
+                    <span class="text-danger"></span>
+                </div>
+
+                <div class="text-center">
+                    <button type="button" onclick="saveForm()" class="btn btn-success text-center" name="submitButton" value="save">Kaydet</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+
 
 
 
@@ -40,7 +81,6 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div id="student-form-modal" class="modal-body">
-                
             </div>
         </div>
     </div>
@@ -58,13 +98,14 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <span id="txtDeleteModalValidation" class="text-danger small"></span>
                 <div class="input-group input-group-sm mb-3">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Silme Nedeni</span>
-                    <input type="text" class="form-control" aria-describedby="inputGroup-sizing-sm">
+                    <input id="reason-for-deletion" type="text" class="form-control" aria-describedby="inputGroup-sizing-sm">
                 </div>
                 <div class="modal-footer d-flex justify-content-between">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" name="submitButton">Vazgeç</button>
-                    <button id="formdelete" class="btn btn-primary">Sil</button>
+                    <button id="btnformdelete" class="btn btn-primary">Sil</button>
                 </div>
             </div>
 
@@ -75,52 +116,69 @@
 @section Scripts{
     <script>
         $(document).ready(function () {
-            
-            $(".filter-area").load("/Home/GetSeacrhPagePartial")
-            $(".pageForm").load("/Home/GetCreatePagePartial")
-            $("table").load("/Home/LoadStudent")
-        })
-        function loadStudent(){
+            $("#pagecontent").hide();
+            $("table").load("/Home/LoadStudent",
+                function () {
+                    $(".filter-area").load("/Home/GetSeacrhPagePartial",
+                        function () {
+                            $(".loader").hide();
+                            $("#pagecontent").show();
+                        });
+                });
+        });
+        function loadStudent() {
             $("table").empty();
             $("table").load("/Home/LoadStudent")
         }
 
         function loadCreateModal() {
             $("#student-form-modal").load("/Home/GetCreatModalPartial")
-            
-        }
 
-        //<h5 class="modal-title" id = "modaldeletetitle" > </h5>
-        function deleteStudent(btn, id) {
-            var studentName = $(btn).attr("student-name");
-            $("#modaldeletetitle").text(`Öğrenci ${studentName}- Silme Nedeniniz`)
-            
-            console.log(studentName);
         }
-        function detailStudent(btn, id) {
-            var studentName = $(btn).attr("student-name");
-            $("#modaldeletetitle").text(`Öğrenci ${studentName}- Silme Nedeniniz`)
-            
-            console.log(studentName);
-        }
+        
+        function filterStudent(btn) {
+            var model = {
+                "Fullname": $("#Fullname").val().trim().length > 0 ? $("#Fullname").val():null,
+                "HobbyId": $("#filterHobbySelect").val() === "0" ? null : $("#filterHobbySelect").val(),
+                "TeacherId": $("#filterTeacherSelect").val() === "0" ? null : $("#filterTeacherSelect").val(),
+            };
+            console.log(model);
+            $("table").empty();
+            $("table").load("/Home/FilterStudent", model,function(){
+               $(btn).hide();
+               $(btn).next().removeClass("d-none");
 
-        function saveForm() {
-            var data     = {
-                "Fullname": $("#formFullName").val(),
-                "DepartmanId": $("#formDepartman").val(),
-                "HobbyId": $("#formHobby").val(),
-                "TeacherId": $("#formteacher1").val(),
-                "GuidanceCounselorId": $("#formTeacher2").val()
+            })
+        }
+        function clearFilter(btn){
+            $("#Fullname").val("");
+            $("#filterHobbySelect").val("0").change();
+            $("#filterTeacherSelect").val("0").change();
+            $(btn).addClass("d-none");
+            $(btn).prev().show();
+            loadStudent();
+        }
+        function deleteStudent(id) {
+            var desc = $("#reason-for-deletion").val();
+            var url = `/Home/DeleteStudent`;
+            if (desc.trim().length > 0) {
+
+                var data = {
+                    "Id": id,
+                    "DeletionDescription": desc
+                }
+                $("table").empty();
+                $("table").load(url, data,
+                    function () {
+                        $("#modaldelete").modal("hide");
+                        toastr["success"]("Öğrenci başarılı bir şekilde silindi", "İşlem Başarılı");
+                    });
             }
-            console.log(data)
-            $(".pageForm").load("/Home/PostCreatePartial", data, null);
-            
-            setTimeout(function(){
-                loadStudent();
-            },2000);
-            
+            else {
+                $("#txtDeleteModalValidation").text("Silme Nedeni boş bırakılamaz");
+            }
         }
-        function saveModalForm(){
+        function saveModalForm() {
             var data = {
                 "Fullname": $("#modalFullName").val(),
                 "DepartmanId": $("#DepartmanId").val(),
@@ -129,11 +187,14 @@
                 "GuidanceCounselorId": $("#GuidanceCounselorId").val()
             }
             console.log(data)
-            $(".student-form-modal").load("/Home/PostCreatePartial", data, null);
-
-            setTimeout(function () {
-                loadStudent();
-            }, 2000);
+            $("#student-form-modal").load("/Home/PostCreatePartial", data,
+                function () {
+                    loadStudent();
+                });
         }
+
+        
+
+
     </script>
 }

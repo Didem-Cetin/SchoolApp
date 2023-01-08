@@ -6,13 +6,17 @@
 <input type="text" class="form-control me-1" placeholder="Ara" asp-for="Fullname" />
 <div class="input-group me-1">
     <select class="form-select" id="filterHobbySelect" asp-for="HobbyId" asp-items="@Model.Hobbies">
-        <option value="">Hobi seçiniz</option>
+        <option value="0">Hobi seçiniz</option>
     </select>
 </div>
 <div class="input-group me-1">
     <select class="form-select" id="filterTeacherSelect" asp-for="TeacherId" asp-items="@Model.Teachers">
-        <option value="">Sınıf öğretmeni seçiniz</option>
+        <option value="0">Sınıf öğretmeni seçiniz</option>
 
     </select>
 </div>
-<button type="submit" onclick="search()" class="btn btn-primary">Ara</button>
+<button type="button" onclick="filterStudent(this)" class="btn btn-primary">Ara</button>
+<button type="button" onclick="clearFilter(this)" class=" ms-1 btn btn-info d-none">Temizle</button>
+
+
+@*overflow-scroll*@

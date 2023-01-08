@@ -18,6 +18,9 @@ namespace StudentsApp.Entities
         public int TeacherId { get; set; }
         [Required]
         public int GuidanceCounselorId { get; set; }
+
+        public bool IsDelete { get; set; }
+        public string? DeletionDescription { get; set; }
         public Departman Departman{ get; set; }
         public Teacher Teacher { get; set; }
         public GuidanceCounselor GuidanceCounselor { get; set; }

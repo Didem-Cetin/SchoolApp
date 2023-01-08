@@ -1,0 +1,10 @@
+﻿@model CloseModelPartial
+
+<script>
+    $("#@Model.ModalId").modal("hide");
+    @if (Model.Notification.ShowToastr)
+    {
+        @:toastr["@Model.Notification.ToastrType"]("@Model.Notification.ToastrMessage", "@Model.Notification.ToastrTitle")
+        
+    }
+</script>

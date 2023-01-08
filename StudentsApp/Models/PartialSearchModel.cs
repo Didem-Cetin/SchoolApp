@@ -9,6 +9,7 @@ namespace StudentsApp.Models
         public int? HobbyId { get; set; }
         public int? TeacherId { get; set; }
 
+        public bool IsHasStudent { get; set; }
 
         public SelectList? Hobbies { get; set; }
         public SelectList? Teachers { get; set; }

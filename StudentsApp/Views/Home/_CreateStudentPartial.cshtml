@@ -1,89 +1,45 @@
 ﻿@model PartialCreateModel
-@if (Model.FormType == 0)
-{
-    <div class="input-group input-group-sm mb-3">
-        <span class="input-group-text" id="inputGroup-sizing-sm">Adı Soyadı</span>
-        <input type="text" class="form-control" aria-describedby="inputGroup-sizing-sm" id="modalFullName" asp-for="Fullname">
-        <span asp-validation-for="Fullname" class="text-danger"></span>
-    </div>
 
-    <div class="input-group mb-3">
-        <select class="form-select" asp-for="DepartmanId" asp-items="@Model.Departmans">
-            <option value="">Bölüm seçiniz</option value="">
+<span asp-validation-for="Fullname" class="text-danger small"></span>
+<div class="input-group input-group-sm mb-3">
+    <span class="input-group-text" id="inputGroup-sizing-sm">Adı Soyadı</span>
+    <input type="text" class="form-control" aria-describedby="inputGroup-sizing-sm" id="modalFullName" asp-for="Fullname">
+</div>
 
-        </select>
-        <span asp-validation-for="DepartmanId" class="text-danger"></span>
-    </div>
+<span asp-validation-for="DepartmanId" class="text-danger small"></span>
+<div class="input-group mb-3">
+    <select class="form-select" asp-for="DepartmanId" asp-items="@Model.Departmans">
+        <option value="">Bölüm seçiniz</option>
+    </select>
+</div>
 
-    <div class="input-group mb-3">
-        <select class="form-select" asp-for="HobbyId" asp-items="@Model.Hobbies">
-            <option value="">Hobi seçiniz</option value="">
+<span asp-validation-for="HobbyId" class="text-danger small"></span>
+<div class="input-group mb-3">
+    <select class="form-select" asp-for="HobbyId" asp-items="@Model.Hobbies">
+        <option value="">Hobi seçiniz</option>
 
-        </select>
-        <span asp-validation-for="HobbyId" class="text-danger"></span>
-    </div>
+    </select>
+</div>
 
-    <div class="input-group mb-3">
-        <select class="form-select" asp-for="TeacherId" asp-items="@Model.Teachers">
-            <option value="">Sınıf Öğretmeni</option value="">
+<span asp-validation-for="TeacherId" class="text-danger small"></span>
+<div class="input-group mb-3">
+    <select class="form-select" asp-for="TeacherId" asp-items="@Model.Teachers">
+        <option value="">Sınıf Öğretmeni</option>
 
-        </select>
-        <span asp-validation-for="TeacherId" class="text-danger"></span>
-    </div>
+    </select>
+</div>
 
-    <div class="input-group mb-3">
-        <select class="form-select" asp-for="GuidanceCounselorId" asp-items="@Model.GuidanceCouncelors">
-            <option value="">Rehber Öğretmeni</option value="">
+<span asp-validation-for="GuidanceCounselorId" class="text-danger small"></span>
+<div class="input-group mb-3">
+    <select class="form-select" asp-for="GuidanceCounselorId" asp-items="@Model.GuidanceCouncelors">
+        <option value="">Rehber Öğretmeni</option>
 
-        </select>
-        <span asp-validation-for="GuidanceCounselorId" class="text-danger"></span>
-    </div>
-    <div class="modal-footer d-flex justify-content-between">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" name="submitButton">Vazgeç</button>
-        <button type="button" onclick="saveModalForm()" class="btn btn-success text-center" name="submitButton" value="save">Kaydet</button>
-    </div>
-}
-else
-{
-    <div class="input-group input-group-sm mb-3">
-        <span class="input-group-text" id="inputGroup-sizing-sm">Adı Soyadı</span>
-        <input id="formFullName" type="text" class="form-control" aria-describedby="inputGroup-sizing-sm" asp-for="Fullname">
-        <span asp-validation-for="Fullname" class="text-danger"></span>
-    </div>
+    </select>
+</div>
+<div class="modal-footer d-flex justify-content-between">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" name="submitButton">Vazgeç</button>
+    <button type="button" onclick="saveModalForm()" class="btn btn-success text-center" name="submitButton" value="save">Kaydet</button>
+</div>
 
-    <div class="input-group mb-3">
-        <select id="formDepartman" class="form-select" asp-for="DepartmanId" asp-items="@Model.Departmans">
-            <option value="">Bölüm seçiniz</option value="">
-        </select>
-        <span asp-validation-for="DepartmanId" class="text-danger"></span>
-    </div>
 
-    <div class="input-group mb-3">
-        <select id="formHobby" class="form-select" asp-for="HobbyId" asp-items="@Model.Hobbies">
-            <option  value="">Hobi seçiniz</option value="">
-
-        </select>
-        <span asp-validation-for="HobbyId" class="text-danger"></span>
-    </div>
-
-    <div class="input-group mb-3">
-        <select id="formteacher1" class="form-select" asp-for="TeacherId" asp-items="@Model.Teachers">
-            <option value="">Sınıf Öğretmeni</option value="">
-
-        </select>
-        <span asp-validation-for="TeacherId" class="text-danger"></span>
-    </div>
-
-    <div class="input-group mb-3">
-        <select id="formTeacher2" class="form-select" asp-for="GuidanceCounselorId" asp-items="@Model.GuidanceCouncelors">
-            <option value="">Rehber Öğretmeni</option value="">
-
-        </select>
-        <span asp-validation-for="GuidanceCounselorId" class="text-danger"></span>
-    </div>
-
-    <div class="text-center">
-        <button type="button" onclick="saveForm()" class="btn btn-success text-center" name="submitButton" value="save">Kaydet</button>
-    </div>
-}
 

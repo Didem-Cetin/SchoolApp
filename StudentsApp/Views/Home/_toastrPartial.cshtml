@@ -1,0 +1,42 @@
+﻿@using StudentsApp.Common;
+@model Toastr
+<script>
+    if ("@Model.ToastrButton".length>0) {
+        var toastrButtonAndMessage = `@Model.ToastrMessage <br/><br/><button type="button" onclick="clearFilter()" class=" btn btn-info">Göster</button>`;
+        console.log(toastrButtonAndMessage)
+        toastr["@Model.ToastrType"]("@Model.ToastrMessage", "@Model.ToastrTitle")
+        //toastr.options={
+        //    ...toastr.options,
+        //    "timeOut": "5000",
+        //    "positionClass": "toast-top-right",
+        //}
+        //console.log(toastr.options);
+        
+        
+        //if (@Model.Options != null) {
+        //    toastr.options = {
+        //        "closeButton": @Model.Options.closeButton,
+        //        "debug": @Model.Options.debug,
+        //        "newestOnTop": @Model.Options.newestOnTop,
+        //        "progressBar": @Model.Options.progressBar,
+        //        "positionClass": "@Model.Options.positionClass",
+        //        "preventDuplicates": @Model.Options.preventDuplicates,
+        //        "onclick": null,
+        //        "showDuration": "@Model.Options.showDuration",
+        //        "hideDuration": "@Model.Options.hideDuration",
+        //        "timeOut": @Model.Options.timeOut,
+        //        "extendedTimeOut": @Model.Options.extendedTimeOut,
+        //        "showEasing": "@Model.Options.showDuration",
+        //        "hideEasing": "@Model.Options.hideEasing",
+        //        "showMethod": "@Model.Options.showMethod",
+        //        "hideMethod": "@Model.Options.hideDuration",
+        //        "tapToDismiss": @Model.Options.tapToDismiss
+        //            }
+        //}
+    }
+    else {
+        toastr["@Model.ToastrType"]("@Model.ToastrMessage", "@Model.ToastrTitle")
+
+    }
+
+</script>
