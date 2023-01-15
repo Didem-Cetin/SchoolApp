@@ -92,3 +92,6 @@ body {
     left: calc(50% - 1.25em);
 }
 
+.dt-buttons .btn{
+    margin-right:5px;
+}

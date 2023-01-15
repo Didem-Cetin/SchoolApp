@@ -10,7 +10,7 @@
         <th>Hobiler</th>
         <th>Sınıf Ögretmeni</th>
         <th>Rehber Öğretmeni</th>
-        <th>İşlem</th>
+        <th class="nosort">İşlem</th>
 
     </tr>
 </thead>
@@ -56,6 +56,15 @@
         //console.log(studentName);
     }
     function detailStudent(btn, id) {
-        console.log(id);
+        $.get(`/Home/GetStudentById/${id}`,function(data){
+            $("#formFullname").val(`${data.fullname}`)
+            $("#formDepartman").val(`${data["departmanId"]}`)
+            $("#formHobby").val(`${data.hobbyId}`)
+            $("#formteacher1").val(`${data.teacherId}`)
+            $("#formTeacher2").val(`${data.guidanceCounselorId}`)
+        }).done(function(){
+            $("#btnUpdate").attr("data-id",id)
+        });
+        
     }
 </script>

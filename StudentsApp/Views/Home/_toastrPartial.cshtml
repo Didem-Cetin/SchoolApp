@@ -1,6 +1,7 @@
 ﻿@using StudentsApp.Common;
 @model Toastr
 <script>
+    //To be fixed
     if ("@Model.ToastrButton".length>0) {
         var toastrButtonAndMessage = `@Model.ToastrMessage <br/><br/><button type="button" onclick="clearFilter()" class=" btn btn-info">Göster</button>`;
         console.log(toastrButtonAndMessage)

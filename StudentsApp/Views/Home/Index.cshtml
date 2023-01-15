@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@model EditModel
 <div class="loader "></div>
 <div id="pagecontent" class="row">
     <div class="col-md-8 col-sm-12 ">
@@ -21,23 +22,23 @@
                     Yeni Öğrenci
                 </button>
             </div>
-
-            <div class="pageForm">
+            <hr />
+            <div class="pageForm ">
                 <div class="input-group input-group-sm mb-3">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Adı Soyadı</span>
-                    <input id="formFullName" type="text" class="form-control" aria-describedby="inputGroup-sizing-sm">
+                    <input id="formFullname" type="text" asp-for="Fullname" class="form-control" aria-describedby="inputGroup-sizing-sm">
                     <span class="text-danger"></span>
                 </div>
 
                 <div class="input-group mb-3">
-                    <select id="formDepartman" class="form-select">
+                    <select id="formDepartman" class="form-select" asp-for="DepartmanId" asp-items="@Model.Departmans">
                         <option value="">Bölüm seçiniz</option>
                     </select>
                     <span class="text-danger"></span>
                 </div>
 
                 <div class="input-group mb-3">
-                    <select id="formHobby" class="form-select">
+                    <select id="formHobby" class="form-select" asp-for="HobbyId" asp-items="@Model.Hobbies">
                         <option value="">Hobi seçiniz</option>
 
                     </select>
@@ -45,7 +46,7 @@
                 </div>
 
                 <div class="input-group mb-3">
-                    <select id="formteacher1" class="form-select">
+                    <select id="formteacher1" class="form-select" asp-for="TeacherId" asp-items="@Model.Teachers">
                         <option value="">Sınıf Öğretmeni</option>
 
                     </select>
@@ -53,7 +54,7 @@
                 </div>
 
                 <div class="input-group mb-3">
-                    <select id="formTeacher2" class="form-select">
+                    <select id="formTeacher2" class="form-select" asp-for="GuidanceCounselorId" asp-items="@Model.GuidanceCouncelors">
                         <option value="">Rehber Öğretmeni</option>
 
                     </select>
@@ -61,7 +62,7 @@
                 </div>
 
                 <div class="text-center">
-                    <button type="button" onclick="saveForm()" class="btn btn-success text-center" name="submitButton" value="save">Kaydet</button>
+                    <button id="btnUpdate" type="button" onclick="updateForm(this)" class="btn btn-success text-center" name="submitButton" value="save">Güncelle</button>
                 </div>
             </div>
         </div>
@@ -117,8 +118,41 @@
     <script>
         $(document).ready(function () {
             $("#pagecontent").hide();
-            $("table").load("/Home/LoadStudent",
+            $(".table").load("/Home/LoadStudent",
                 function () {
+                    var table = $('.table').DataTable({
+                        dom: 'Bfrtip',
+                        buttons: [
+                            {
+                                extend: 'excelHtml5',
+                                exportOptions: {
+                                    columns: [0, 1, 2, 3, 4]
+                                }
+                            }, 
+                            {
+                                extend: 'pdf',
+                                exportOptions: {
+                                    columns: [0, 1, 2, 3, 4]
+                                }
+                            }, 
+                            {
+                                extend: 'print',
+                                exportOptions: {
+                                    columns: [0, 1, 2, 3, 4]
+                                }
+                            }, 'colvis'
+                        ],
+                        pageLength: 50,
+                        language: {
+                            url: `//cdn.datatables.net/plug-ins/1.13.1/i18n/tr.json`
+                        },
+                        columnDefs: [
+                            { orderable: false, targets: 5 }
+                        ],
+                    });
+
+
+
                     $(".filter-area").load("/Home/GetSeacrhPagePartial",
                         function () {
                             $(".loader").hide();
@@ -135,22 +169,60 @@
             $("#student-form-modal").load("/Home/GetCreatModalPartial")
 
         }
-        
+
         function filterStudent(btn) {
             var model = {
-                "Fullname": $("#Fullname").val().trim().length > 0 ? $("#Fullname").val():null,
+                "Fullname": $("#Fullname").val().trim().length > 0 ? $("#Fullname").val() : null,
                 "HobbyId": $("#filterHobbySelect").val() === "0" ? null : $("#filterHobbySelect").val(),
                 "TeacherId": $("#filterTeacherSelect").val() === "0" ? null : $("#filterTeacherSelect").val(),
             };
             console.log(model);
             $("table").empty();
-            $("table").load("/Home/FilterStudent", model,function(){
-               $(btn).hide();
-               $(btn).next().removeClass("d-none");
+            $("table").load("/Home/FilterStudent", model, function () {
+                $(btn).hide();
+                $(btn).next().removeClass("d-none");
 
             })
         }
-        function clearFilter(btn){
+        function updateForm(btn) {
+            var id = $(btn).attr("data-id");
+            if (id == undefined) {
+                alert("Tablodan Öğrenci seçilmedi");
+            }
+            else {
+                var data = {
+                    Fullname: $("#formFullname").val(),
+                    DepartmanId: $("#formDepartman").val(),
+                    HobbyId: $("#formHobby").val(),
+                    TeacherId: $("#formteacher1").val(),
+                    GuidanceCounselorId: $("#formTeacher2").val()
+                };
+                console.log(data);
+                $.post(`/Home/EditStudent/${id}`, data, function () {
+                    loadStudent();
+                    $("#formFullname").val("");
+                    $("#formDepartman").val("");
+                    $("#formHobby").val("");
+                    $("#formteacher1").val("");
+                    $("#formTeacher2").val("");
+                })
+            }
+        }
+        function saveModalForm() {
+            var data = {
+                "Fullname": $("#modalFullName").val(),
+                "DepartmanId": $("#DepartmanId").val(),
+                "HobbyId": $("#HobbyId").val(),
+                "TeacherId": $("#TeacherId").val(),
+                "GuidanceCounselorId": $("#GuidanceCounselorId").val()
+            }
+            console.log(data)
+            $("#student-form-modal").load("/Home/PostCreatePartial", data,
+                function () {
+                    loadStudent();
+                });
+        }
+        function clearFilter(btn) {
             $("#Fullname").val("");
             $("#filterHobbySelect").val("0").change();
             $("#filterTeacherSelect").val("0").change();
@@ -178,22 +250,9 @@
                 $("#txtDeleteModalValidation").text("Silme Nedeni boş bırakılamaz");
             }
         }
-        function saveModalForm() {
-            var data = {
-                "Fullname": $("#modalFullName").val(),
-                "DepartmanId": $("#DepartmanId").val(),
-                "HobbyId": $("#HobbyId").val(),
-                "TeacherId": $("#TeacherId").val(),
-                "GuidanceCounselorId": $("#GuidanceCounselorId").val()
-            }
-            console.log(data)
-            $("#student-form-modal").load("/Home/PostCreatePartial", data,
-                function () {
-                    loadStudent();
-                });
-        }
 
-        
+
+
 
 
     </script>

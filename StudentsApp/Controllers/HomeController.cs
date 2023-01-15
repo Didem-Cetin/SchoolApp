@@ -19,19 +19,65 @@ namespace StudentsApp.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            EditModel model = new EditModel()
+            {
+                Departmans = new SelectList(_databaseContext.Departmans.ToList(), nameof(Departman.Id), nameof(Departman.Name)),
+                Hobbies = new SelectList(_databaseContext.Hobbies.ToList(), nameof(Hobby.Id), nameof(Hobby.Name)),
+                Teachers = new SelectList(_databaseContext.Teachers.ToList(), nameof(Teacher.Id), nameof(Teacher.Name)),
+                GuidanceCouncelors = new SelectList(_databaseContext.GuidanceCounselors.ToList(), nameof(GuidanceCounselor.Id), nameof(GuidanceCounselor.Name)),
+            };
+            return View(model);
         }
 
+        //Get: /Home/LoadStudent
         public IActionResult LoadStudent()
         {
             List<Student> model = _databaseContext.Students.Include(x => x.Departman).Include(x => x.Teacher).Include(x => x.GuidanceCounselor).Include(x => x.Hobbies).Where(x => !x.IsDelete).ToList();
 
-            //response<Roles> Response1 = new response<Roles>();
-            //Response1.errorMessage.Add(new KeyValuePair<string, string>("hata 1", "hata"));
             return PartialView("_LoadStudentPartial", model);
         }
 
+        //Get: /Home/GetStudentById/id
+        public IActionResult GetStudentById(int id)
+        {
+            Student student = _databaseContext.Students.Include(x => x.Hobbies).Include(x => x.Departman).Include(x => x.Teacher).Include(x => x.GuidanceCounselor).Include(x => x.Hobbies).FirstOrDefault(x => x.Id == id);
 
+            if (student == null)
+            {
+                //toastr
+            }
+            EditModel model = new EditModel()
+            {
+                Fullname = student.Fullname,
+                HobbyId = student.Hobbies.Select(x => x.Id).First(),
+                DepartmanId = student.DepartmanId,
+                TeacherId = student.TeacherId,
+                GuidanceCounselorId = student.GuidanceCounselorId
+            };
+            
+            return Json(model);
+        }
+
+        //Post: /Home/EditStudent/id
+        [HttpPost]
+        public IActionResult EditStudent(int id, EditModel model)
+        {
+            Student student = _databaseContext.Students.Include(x => x.Hobbies).Include(x => x.Departman).Include(x => x.Teacher).Include(x => x.GuidanceCounselor).Include(x => x.Hobbies).FirstOrDefault(x => x.Id == id);
+
+            student.Fullname = model.Fullname;
+            student.DepartmanId = model.DepartmanId;
+            student.TeacherId = model.TeacherId;
+            student.GuidanceCounselorId = model.GuidanceCounselorId;
+            student.Hobbies = new List<Hobby>()
+                    {
+                        _databaseContext.Hobbies.Find(model.HobbyId)
+                    };
+
+            _databaseContext.SaveChanges();
+            return Json(model);
+        }
+
+        //Get: /Home/DeleteStudent
         public IActionResult DeleteStudent(DeleteModel model)
         {
             Student student = _databaseContext.Students.Find(model.Id);
@@ -42,7 +88,7 @@ namespace StudentsApp.Controllers
             return RedirectToAction(nameof(LoadStudent));
         }
 
-
+        //Get: /Home/GetSeacrhPagePartial
         public IActionResult GetSeacrhPagePartial()
         {
             PartialSearchModel model = new PartialSearchModel()
@@ -54,7 +100,7 @@ namespace StudentsApp.Controllers
             return PartialView("_SearchPartial", model);
         }
 
-
+        //Get: /Home/FilterStudent
         public IActionResult FilterStudent(PartialSearchModel model)
         {
             List<Student> allStudents = _databaseContext.Students
@@ -64,29 +110,29 @@ namespace StudentsApp.Controllers
                             .Include(x => x.Hobbies)
                             .Where(x => !x.IsDelete).ToList();
 
-            
+
 
             List<Student> filterStudents = allStudents;
             if (model.HobbyId != null)
             {
-                filterStudents = allStudents.Where(x => x.Hobbies.All(h => h.Id == model.HobbyId)&&!x.IsDelete).ToList();
-               
+                filterStudents = allStudents.Where(x => x.Hobbies.All(h => h.Id == model.HobbyId) && !x.IsDelete).ToList();
+
             }
-            
+
             if (model.Fullname != null && model.TeacherId != null)
             {
-                filterStudents = filterStudents.Where(x => x.Fullname==model.Fullname && x.TeacherId == model.TeacherId).ToList();
+                filterStudents = filterStudents.Where(x => x.Fullname == model.Fullname && x.TeacherId == model.TeacherId).ToList();
             }
-            else if(model.Fullname != null && model.TeacherId == null)
+            else if (model.Fullname != null && model.TeacherId == null)
             {
                 filterStudents = filterStudents.Where(x => x.Fullname == model.Fullname).ToList();
             }
-            else if(model.Fullname == null && model.TeacherId != null)
+            else if (model.Fullname == null && model.TeacherId != null)
             {
                 filterStudents = filterStudents.Where(x => x.TeacherId == model.TeacherId).ToList();
             }
 
-            if(filterStudents.Count() == allStudents.Count()|| filterStudents.Count()==0)
+            if (filterStudents.Count() == allStudents.Count() || filterStudents.Count() == 0)
             {
                 Toastr Notification = new Toastr()
                 {
@@ -101,20 +147,20 @@ namespace StudentsApp.Controllers
                         newestOnTop = false,
                         progressBar = false,
                         positionClass = ToastrPosition.top_right,
-                        preventDuplicates=false,
-                        
-                        showDuration="300",
-                        hideDuration="1000",
-                        timeOut=0,
-                        extendedTimeOut=0,
-                        showEasing="swing",
-                        hideEasing="linear",
-                        showMethod="fadeIn",
-                        hideMethod="faddeOut",
-                        tapToDismiss=false
+                        preventDuplicates = false,
+
+                        showDuration = "300",
+                        hideDuration = "1000",
+                        timeOut = 0,
+                        extendedTimeOut = 0,
+                        showEasing = "swing",
+                        hideEasing = "linear",
+                        showMethod = "fadeIn",
+                        hideMethod = "faddeOut",
+                        tapToDismiss = false
                     },
                     ShowToastr = true
-                    
+
                 };
                 return PartialView("_toastrPartial", Notification);
 
@@ -168,7 +214,7 @@ namespace StudentsApp.Controllers
                     }
 
                 };
-                
+
                 return PartialView("_CloseModalPartial", closeModel);
 
             }
