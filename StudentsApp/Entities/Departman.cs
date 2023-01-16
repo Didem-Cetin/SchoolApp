@@ -12,6 +12,8 @@ namespace StudentsApp.Entities
         [StringLength(50)]
 
         public string Name { get; set; }
+        
+        public List<Student> Students { get; set; }  //  :)
     }
 
 }
